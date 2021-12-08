@@ -14,10 +14,13 @@ const GEM_COLORS = [
   '#FF5722',
 ];
 
-const STEP_DURATION = 350;
+const STEP_DURATION = 400;
+const STEP_INTERVAL = STEP_DURATION + 250;
 
 // Global variables
-let = sequenceSteps = [];
+let sequenceSteps = []; // current round sequence
+let stepQueue = []; // Temp buffer to play sequence
+let sequencePlayer = null; // Stores inerval handle
 
 // HTML element selectors
 const gems = document.querySelectorAll('.gem');
@@ -54,9 +57,8 @@ function darkenGem(gem) {
 
 function pulseGem(gem) {
   brightenGem(gem);
-  console.log('Gem on');
+  // TODO: Play tone
   setTimeout(darkenGem, STEP_DURATION, gem);
-  console.log('Gem off requested');
 }
 
 // TODO: dynamic creation of buttons
@@ -69,17 +71,27 @@ function addRandomStep() {
   sequenceSteps.push(Math.floor(Math.random() * 16));
 }
 
-function playSequence() {
-  // LOOP through all elements in sequence
-  sequenceSteps.forEach();
-  // Brighten button
+function sequenceStepper() {
+  // Take one step from queue and pulse the gem
+  const nextGem = gems[stepQueue.shift()];
+  pulseGem(nextGem);
 
-  // TODO: Play tone
-  // long Delay
-  // Darken button
-  // short delay
-  // Generate new step
-  // append new step to sequnce array
+  // console.log(`${stepQueue.length} steps left`);
+
+  // when queue is empty, clear interval
+  if (!stepQueue.length) {
+    clearInterval(sequencePlayer);
+    // console.log('cleared interval');
+  }
+}
+
+function triggerSequence() {
+  // Copy steps to a temp buffer
+  stepQueue = [...sequenceSteps];
+  console.log('queue is now:', stepQueue);
+
+  // Start iterator
+  sequencePlayer = setInterval(sequenceStepper, STEP_INTERVAL);
 }
 
 function listenForSequence() {
@@ -100,3 +112,16 @@ for (let i = 0; i < 5; i++) {
   addRandomStep();
 }
 console.log(sequenceSteps);
+
+// TODO: imrpove interval with Promise delay chain?
+/* 
+// https://stackoverflow.com/questions/41079410/delays-between-promises-in-promise-chain
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+let parameterArr = ['a', 'b', 'c', 'd', 'e', 'f'];
+
+parameterArr.reduce(function (promise, item) {
+  return promise.then(function (result) {
+    return Promise.all([delay(50), myPromise(item)]);
+  });
+}, Promise.resolve());
+ */
