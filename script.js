@@ -26,6 +26,15 @@ let sequencePlayer = null; // Stores inerval handle
 const gems = document.querySelectorAll('.gem');
 const board = document.querySelector('#board');
 
+/////// TODO: delete temporary functionality
+//
+const testButton = document.querySelector('.test');
+testButton.addEventListener('click', () => {
+  startRound();
+});
+//
+/////// End temporary functionality
+
 // Event listeners
 board.addEventListener('mousedown', (event) => {
   if (event.target.classList.contains('gem')) {
@@ -68,7 +77,8 @@ function pulseGem(gem) {
  ********************/
 
 function addRandomStep() {
-  sequenceSteps.push(Math.floor(Math.random() * 16));
+  // Generate random number between 0 and # of gems and add to sequence register
+  sequenceSteps.push(Math.floor(Math.random() * gems.length));
 }
 
 function sequenceStepper() {
@@ -90,28 +100,38 @@ function triggerSequence() {
   stepQueue = [...sequenceSteps];
   console.log('queue is now:', stepQueue);
 
-  // Start iterator
-  sequencePlayer = setInterval(sequenceStepper, STEP_INTERVAL);
+  // Do first step without delay
+  sequenceStepper;
+  if (stepQueue.length) {
+    // Only if there are steps in queue
+    // Start iterator
+    sequencePlayer = setInterval(sequenceStepper, STEP_INTERVAL);
+  }
 }
 
-function listenForSequence() {
+function listenForResponse() {
   // compare current input with first step of sequence
   // if incorrect > lose round
   // if correct, advance step in sequence and listen for next step
 }
 
-// TODO: Below code is for tests, bake into final functionality
+function startRound() {
+  // Add a step to the sequence queue
+  addRandomStep();
 
+  // Trigger sequence
+  triggerSequence();
+}
+
+//
+//
+//
+// TODO: Below code is for tests, bake into final functionality
 // Test colors
 gems.forEach((element, i) => {
   element.style.backgroundColor = GEM_COLORS[i];
   element.id = i;
 });
-
-for (let i = 0; i < 5; i++) {
-  addRandomStep();
-}
-console.log(sequenceSteps);
 
 // TODO: imrpove interval with Promise delay chain?
 /* 
