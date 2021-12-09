@@ -18,9 +18,11 @@ const STEP_DURATION = 400;
 const STEP_INTERVAL = STEP_DURATION + 250;
 
 // Global variables
-let sequenceSteps = []; // current round sequence
+let challengeSequence = []; // Current round sequence
+let enteredSequence = []; // User-entered steps
 let stepQueue = []; // Temp buffer to play sequence
 let sequencePlayer = null; // Stores inerval handle
+let listeningState = false; // Track game input state
 
 // HTML element selectors
 const gems = document.querySelectorAll('.gem');
@@ -28,6 +30,14 @@ const board = document.querySelector('#board');
 
 /////// TODO: delete temporary functionality
 //
+
+// change to false to turn off debug messages
+// const DEBUG = true;
+
+// function log(message) {
+//   if (DEBUG) console.log(message);
+// }
+
 const testButton = document.querySelector('.test');
 testButton.addEventListener('click', () => {
   startRound();
@@ -35,7 +45,7 @@ testButton.addEventListener('click', () => {
 //
 /////// End temporary functionality
 
-// Event listeners
+// Event listeners for button styling
 board.addEventListener('mousedown', (event) => {
   if (event.target.classList.contains('gem')) {
     brightenGem(event.target);
@@ -49,6 +59,14 @@ board.addEventListener('mouseup', (event) => {
 board.addEventListener('mouseout', (event) => {
   if (event.target.classList.contains('gem')) {
     darkenGem(event.target);
+  }
+});
+
+// Event listener for user input
+board.addEventListener('click', (event) => {
+  if (listeningState && event.target.classList.contains('gem')) {
+    // Record gem id as int
+    recordGemPress(parseInt(event.target.id));
   }
 });
 
@@ -71,14 +89,28 @@ function pulseGem(gem) {
 }
 
 // TODO: dynamic creation of buttons
+gems.forEach((element, i) => {
+  element.style.backgroundColor = GEM_COLORS[i];
+  element.id = i;
+});
 
 /********************
  *  Game Functions  *
  ********************/
 
+function resetGame() {
+  // Clear states
+  challengeSequence = [];
+  enteredSequence = [];
+  stepQueue = [];
+  listeningState = false;
+
+  // TODO: Reshuffle buttons?
+}
+
 function addRandomStep() {
   // Generate random number between 0 and # of gems and add to sequence register
-  sequenceSteps.push(Math.floor(Math.random() * gems.length));
+  challengeSequence.push(Math.floor(Math.random() * gems.length));
 }
 
 function sequenceStepper() {
@@ -91,14 +123,15 @@ function sequenceStepper() {
   // when queue is empty, clear interval
   if (!stepQueue.length) {
     clearInterval(sequencePlayer);
-    // console.log('cleared interval');
+    readyToListen();
+    // console.log('Ready to listen!');
   }
 }
 
 function triggerSequence() {
   // Copy steps to a temp buffer
-  stepQueue = [...sequenceSteps];
-  console.log('queue is now:', stepQueue);
+  stepQueue = [...challengeSequence];
+  // console.log('Challenge:', stepQueue);
 
   // Do first step without delay
   sequenceStepper;
@@ -109,29 +142,47 @@ function triggerSequence() {
   }
 }
 
-function listenForResponse() {
-  // compare current input with first step of sequence
-  // if incorrect > lose round
-  // if correct, advance step in sequence and listen for next step
+function recordGemPress(gemId) {
+  // Log user-pressed step
+  enteredSequence.push(gemId);
+
+  // Current place in sequence
+  let step = enteredSequence.length;
+
+  // Check if user sequence matches computer sequence
+  if (challengeSequence[step - 1] !== gemId) {
+    // Incorrect step
+    // TODO: Replace alert with modal
+    alert('Game over!');
+    // TODO: flash the gem user missed
+    resetGame();
+  } else if (step === challengeSequence.length) {
+    // Full sequence matched, generate new sequence
+
+    // TODO: do something to notify user he was correct
+
+    startRound();
+  }
+}
+
+function readyToListen() {
+  // Enable input
+  listeningState = true;
+
+  // TODO: Notify user it's his turn
 }
 
 function startRound() {
+  // Disable input
+  listeningState = false;
+  // Reset user sequence
+  enteredSequence = [];
+
   // Add a step to the sequence queue
   addRandomStep();
-
   // Trigger sequence
   triggerSequence();
 }
-
-//
-//
-//
-// TODO: Below code is for tests, bake into final functionality
-// Test colors
-gems.forEach((element, i) => {
-  element.style.backgroundColor = GEM_COLORS[i];
-  element.id = i;
-});
 
 // TODO: imrpove interval with Promise delay chain?
 /* 
