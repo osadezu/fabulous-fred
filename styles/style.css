@@ -1,25 +1,49 @@
-body {
-  background-color: #232323;
-  color: gold;
-  text-align: center;
-  font-family: 'Courier New', Courier, monospace;
+@font-face {
+  font-family: 'Bitwise';
+  src: url(../assets/fonts/bitwise/bitwise.ttf);
 }
 
-#console {
+html {
+  font-size: 2.5vh;
+  font-family: 'Bitwise', 'Courier New', Courier, monospace;
+}
+
+body {
+  /* background-color: #232323; */
+  background-color: #424242;
+  color: gold;
+  text-align: center;
+  padding: 1.2rem;
+}
+
+h1 {
+  font-size: 3rem;
+  font-weight: 900;
+}
+
+h2 {
+  font-size: 1.6rem;
+  font-weight: 300;
+  margin-bottom: 1rem;
+  margin-top: -1rem;
+}
+
+main {
   margin: 0 auto;
-  height: 70vh;
-  /* https://stackoverflow.com/a/66335230/1074802 */
-  aspect-ratio: 3/4;
-  background-color: #fef9ef;
+  /* background-color: #efebe9; */
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 #board {
-  width: 90%;
-  height: 90%;
-  background-color: #172774;
+  /* margin: 1rem; */
+  box-sizing: initial;
+  border: 2.5rem outset #efebe9;
+  border-radius: 2rem;
+  height: 60vh;
+  aspect-ratio: 2/3;
+  background-color: #1976d2;
   /* display: flex;
   flex-flow: row wrap;
   justify-content: space-evenly;
@@ -27,7 +51,7 @@ body {
 
   display: grid;
   grid-template-columns: repeat(3, 20%);
-  grid-template-rows: repeat(4, 18%);
+  grid-template-rows: repeat(4, 17%);
   justify-items: center;
   justify-content: space-evenly;
   align-items: center;
@@ -37,11 +61,30 @@ body {
 .gem {
   width: 100%;
   height: 100%;
-  -webkit-filter: brightness(75%);
-  filter: brightness(75%);
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  border-radius: 0.2rem;
+  border: 0.01rem solid rgb(0, 0, 0);
+  box-shadow: 0 0.7rem #212121;
+  transform: translateY(-0.7rem);
 }
 
+.gem:hover {
+  border: 0.15rem solid #f5f5f5;
+  /* box-shadow: 0 0.7rem #f5f5f5; */
+  /* filter: brightness(2); */
+}
+
+.gem:active {
+  /* border: 0.15rem solid #f5f5f5; */
+  box-shadow: 0 0.2rem #f5f5f5;
+  transform: translateY(-0.2rem);
+}
+
+/* Used by computer to display the sequence to user */
 .bright {
-  -webkit-filter: brightness(100%);
-  filter: brightness(100%);
+  border: 0.15rem solid #f5f5f5;
+  box-shadow: 0 0.7rem #f5f5f5;
 }
