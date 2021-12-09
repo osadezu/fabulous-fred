@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./styles/reset.css" />
     <link rel="stylesheet" href="./styles/style.css" />
+    <script
+      src="https://kit.fontawesome.com/5d6e51a2e6.js"
+      crossorigin="anonymous"
+    ></script>
     <title>Fabulous Fred</title>
   </head>
   <body>
@@ -14,22 +18,47 @@
       <h2>The ultimate memory game</h2>
     </header>
     <main>
-      <div id="board">
-        <button class="gem"></button>
-        <button class="gem"></button>
-        <button class="gem"></button>
-        <button class="gem"></button>
-        <button class="gem"></button>
-        <button class="gem"></button>
-        <button class="gem"></button>
-        <button class="gem"></button>
-        <button class="gem"></button>
-        <button class="gem"></button>
-        <button class="gem"></button>
-        <button class="gem"></button>
+      <div id="console">
+        <div id="board">
+          <button class="gem"></button>
+          <button class="gem"></button>
+          <button class="gem"></button>
+          <button class="gem"></button>
+          <button class="gem"></button>
+          <button class="gem"></button>
+          <button class="gem"></button>
+          <button class="gem"></button>
+          <button class="gem"></button>
+          <button class="gem"></button>
+          <button class="gem"></button>
+          <button class="gem"></button>
+        </div>
       </div>
+      <aside>
+        <div class="controls" id="top-controls">
+          <fieldset id="num-gems">
+            <legend>Difficulty&nbsp;Level</legend>
+            <button class="control">4</button>
+            <button class="control">8</button>
+            <button class="control selected">12</button>
+          </fieldset>
+          <fieldset id="reset">
+            <legend>Reset</legend>
+            <button class="control reset">(╯°□°)╯︵ ┻━┻</button>
+          </fieldset>
+        </div>
+      </aside>
     </main>
-    <button class="test" style="margin: 10px">Test</button>
+    <footer>
+      <button class="test" style="margin: 10px">Test</button>
+    </footer>
+    <div id="modal-bg">
+      <div id="modal">
+        <h2>Modal Title</h2>
+        <p>Some modal message</p>
+        <a href="#" id="dismiss"><i class="fas fa-times"></i></a>
+      </div>
+    </div>
     <script src="script.js"></script>
   </body>
 </html>
