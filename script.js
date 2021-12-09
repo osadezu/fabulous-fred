@@ -21,7 +21,7 @@ const STEP_INTERVAL = STEP_DURATION + 250;
 let challengeSequence = []; // Current round sequence
 let enteredSequence = []; // User-entered steps
 let stepQueue = []; // Temp buffer to play sequence
-let sequencePlayer = null; // Stores inerval handle
+let sequencePlayer = false; // Stores inerval handle
 let listeningState = false; // Track game input state
 
 // HTML element selectors
@@ -46,21 +46,21 @@ testButton.addEventListener('click', () => {
 /////// End temporary functionality
 
 // Event listeners for button styling
-board.addEventListener('mousedown', (event) => {
-  if (event.target.classList.contains('gem')) {
-    brightenGem(event.target);
-  }
-});
-board.addEventListener('mouseup', (event) => {
-  if (event.target.classList.contains('gem')) {
-    darkenGem(event.target);
-  }
-});
-board.addEventListener('mouseout', (event) => {
-  if (event.target.classList.contains('gem')) {
-    darkenGem(event.target);
-  }
-});
+// board.addEventListener('mousedown', (event) => {
+//   if (event.target.classList.contains('gem')) {
+//     // brightenGem(event.target);
+//   }
+// });
+// board.addEventListener('mouseup', (event) => {
+//   if (event.target.classList.contains('gem')) {
+//     // darkenGem(event.target);
+//   }
+// });
+// board.addEventListener('mouseout', (event) => {
+//   if (event.target.classList.contains('gem')) {
+//     // darkenGem(event.target);
+//   }
+// });
 
 // Event listener for user input
 board.addEventListener('click', (event) => {
@@ -92,6 +92,7 @@ function pulseGem(gem) {
 gems.forEach((element, i) => {
   element.style.backgroundColor = GEM_COLORS[i];
   element.id = i;
+  // element.style.borderColor = GEM_COLORS[i];
 });
 
 /********************
@@ -104,6 +105,7 @@ function resetGame() {
   enteredSequence = [];
   stepQueue = [];
   listeningState = false;
+  sequencePlayer = false;
 
   // TODO: Reshuffle buttons?
 }
@@ -123,6 +125,7 @@ function sequenceStepper() {
   // when queue is empty, clear interval
   if (!stepQueue.length) {
     clearInterval(sequencePlayer);
+    sequencePlayer = false;
     readyToListen();
     // console.log('Ready to listen!');
   }
@@ -138,7 +141,10 @@ function triggerSequence() {
   if (stepQueue.length) {
     // Only if there are steps in queue
     // Start iterator
-    sequencePlayer = setInterval(sequenceStepper, STEP_INTERVAL);
+    if (!sequencePlayer) {
+      // Prevent setting repeat interval
+      sequencePlayer = setInterval(sequenceStepper, STEP_INTERVAL);
+    }
   }
 }
 
