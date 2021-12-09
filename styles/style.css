@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'Bitwise';
-  src: url(../assets/fonts/bitwise/bitwise.ttf);
+  src: url(./fonts/bitwise/bitwise.ttf);
 }
 
 html {
