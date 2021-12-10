@@ -23,21 +23,26 @@ let enteredSequence = []; // User-entered steps
 let stepQueue = []; // Temp buffer to play sequence
 let sequencePlayer = false; // Stores inerval handle
 let listeningState = false; // Track game input state
+const gameSettings = {
+  numGems: 12,
+  insaneMode: false,
+};
 
-// HTML element selectors
-const gems = document.querySelectorAll('.gem');
-const board = document.querySelector('#board');
+/****************************
+ *  HTML element selectors  *
+ ****************************/
+
+// Containers
+const gameBoard = document.querySelector('#board');
+const controlNumGems = document.querySelector('#num-gems');
+
+// Buttons
+let btnGems = []; // Created dynamically
+const btnNumGems = document.querySelectorAll('#num-gems > .control-btn');
+const btnReset = document.querySelector('#reset > .control-btn');
 
 /////// TODO: delete temporary functionality
 //
-
-// change to false to turn off debug messages
-// const DEBUG = true;
-
-// function log(message) {
-//   if (DEBUG) console.log(message);
-// }
-
 const testButton = document.querySelector('.test');
 testButton.addEventListener('click', () => {
   startRound();
@@ -63,12 +68,30 @@ testButton.addEventListener('click', () => {
 // });
 
 // Event listener for user input
-board.addEventListener('click', (event) => {
+gameBoard.addEventListener('click', (event) => {
   if (listeningState && event.target.classList.contains('gem')) {
     // Record gem id as int
     recordGemPress(parseInt(event.target.id));
   }
 });
+
+// Event listeners for controls
+controlNumGems.addEventListener('click', (event) => {
+  if (
+    !event.target.classList.contains('selected') &&
+    event.target.classList.contains('control-btn')
+  ) {
+    // Change difficulty number of gems and generate buttons
+    gameSettings.numGems = parseInt(event.target.dataset.numGems);
+    // Rebuild
+    resetGame();
+  }
+});
+
+btnReset.addEventListener('click', resetGame);
+
+// Event listener to start game after load
+document.addEventListener('DOMContentLoaded', resetGame);
 
 /********************
  *  View Functions  *
@@ -88,12 +111,42 @@ function pulseGem(gem) {
   setTimeout(darkenGem, STEP_DURATION, gem);
 }
 
-// TODO: dynamic creation of buttons
-gems.forEach((element, i) => {
-  element.style.backgroundColor = GEM_COLORS[i];
-  element.id = i;
-  // element.style.borderColor = GEM_COLORS[i];
-});
+// Refresh control buttons states
+function refreshControls() {
+  // Update button styling
+  btnNumGems.forEach((btn) => {
+    if (parseInt(btn.dataset.numGems) === gameSettings.numGems) {
+      btn.classList.add('selected');
+    } else {
+      btn.classList.remove('selected');
+    }
+  });
+}
+
+// Dynamic creation of buttons
+function changeNumGems(numGems) {
+  // Clear button elements
+  btnGems = [];
+  // Clear existing buttons
+  gameBoard.innerHTML = '';
+  // Set grid styling
+  gameBoard.classList = `num-gems-${numGems}`;
+  // console.log(gameB)
+  // Create new buttons
+  for (let i = 0; i < numGems; i++) {
+    // Create gem button
+    const gem = document.createElement('button');
+    gem.classList.add('gem');
+    gem.style.backgroundColor = GEM_COLORS[i];
+    gem.id = i;
+
+    // Add gem to game board element
+    gameBoard.appendChild(gem);
+
+    // gem.style.borderColor = GEM_COLORS[i];
+    btnGems.push(gem);
+  }
+}
 
 /********************
  *  Game Functions  *
@@ -105,19 +158,27 @@ function resetGame() {
   enteredSequence = [];
   stepQueue = [];
   listeningState = false;
+
+  // Clear interval
+  clearInterval(sequencePlayer);
   sequencePlayer = false;
+
+  // Refresh controls display
+  refreshControls();
+  // Generate game buttons
+  changeNumGems(gameSettings.numGems);
 
   // TODO: Reshuffle buttons?
 }
 
 function addRandomStep() {
   // Generate random number between 0 and # of gems and add to sequence register
-  challengeSequence.push(Math.floor(Math.random() * gems.length));
+  challengeSequence.push(Math.floor(Math.random() * btnGems.length));
 }
 
 function sequenceStepper() {
   // Take one step from queue and pulse the gem
-  const nextGem = gems[stepQueue.shift()];
+  const nextGem = btnGems[stepQueue.shift()];
   pulseGem(nextGem);
 
   // console.log(`${stepQueue.length} steps left`);
@@ -138,13 +199,10 @@ function triggerSequence() {
 
   // Do first step without delay
   sequenceStepper;
-  if (stepQueue.length) {
-    // Only if there are steps in queue
+  if (stepQueue.length && !sequencePlayer) {
+    // Only if there are steps in queue and no interval is set
     // Start iterator
-    if (!sequencePlayer) {
-      // Prevent setting repeat interval
-      sequencePlayer = setInterval(sequenceStepper, STEP_INTERVAL);
-    }
+    sequencePlayer = setInterval(sequenceStepper, STEP_INTERVAL);
   }
 }
 
