@@ -1,6 +1,14 @@
 @font-face {
   font-family: 'Bitwise';
-  src: url(./fonts/bitwise/bitwise.ttf);
+  src: url(./fonts/bitwise/bitwise.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Roses are FF0000';
+  src: url(./fonts/roses-are-ff0000/RosesareFF0000.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'lcd phone';
+  src: url(./fonts/lcd-phone/LCDPHONE.ttf) format('truetype');
 }
 
 :root {
@@ -47,7 +55,9 @@ a {
 }
 
 a:hover {
-  color: tomato;
+  /* color: tomato; */
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
 }
 
 main {
@@ -67,6 +77,22 @@ main {
 
 /******  Controls  ******/
 
+input.lcd {
+  /* font-family: 'lcd phone', 'Bitwise', 'Courier New', Courier, monospace; */
+  font-family: 'Roses are FF0000', 'Bitwise', 'Courier New', Courier, monospace;
+  font-size: 1.2rem;
+  text-align: center;
+  height: 2rem;
+  margin-top: -0.6rem;
+  background-color: #4caf50;
+  color: #424242;
+  pointer-events: none;
+}
+
+fieldset#display {
+  padding: 0.5rem 0.2rem;
+}
+
 .controls {
   margin: 1rem;
   padding: 1rem;
@@ -79,7 +105,7 @@ main {
   padding: 1rem;
   display: flex;
   flex-flow: row nowrap;
-  justify-content: space-evenly;
+  justify-content: space-around;
 }
 
 .control-btn {
@@ -209,5 +235,6 @@ button:active {
 }
 
 footer {
+  margin-top: 1.5rem;
   text-align: center;
 }

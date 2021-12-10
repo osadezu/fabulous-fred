@@ -25,6 +25,17 @@
       </div>
       <aside>
         <div class="controls" id="top-controls">
+          <fieldset id="display">
+            <legend>Fred&nbsp;Says:</legend>
+            <input
+              type="text"
+              class="lcd"
+              readonly
+              placeholder="HELLO THERE!"
+              size="12"
+            />
+            <!-- <button class="control-btn stretch">Play!</button> -->
+          </fieldset>
           <fieldset id="num-gems">
             <legend>Difficulty&nbsp;Level</legend>
             <button class="control-btn" data-num-gems="4">4</button>
@@ -32,18 +43,23 @@
             <button class="control-btn" data-num-gems="12">12</button>
           </fieldset>
           <fieldset id="play">
-            <legend>New&nbsp;Game</legend>
+            <legend>Game&nbsp;Controls</legend>
             <button class="control-btn stretch">Play!</button>
           </fieldset>
           <fieldset id="reset">
-            <legend>Reset</legend>
+            <legend>Fat Reset Button</legend>
             <button class="control-btn stretch">(╯°□°)╯︵ ┻━┻</button>
           </fieldset>
         </div>
       </aside>
     </main>
     <footer>
-      <button class="test" style="margin: 10px">Test</button>
+      <a
+        href="https://github.com/osadezu/fabulous-fred"
+        target="_blank"
+        rel="noopener noreferrer"
+        >Go to GitHub Repo</a
+      >
     </footer>
     <div id="modal" class="modal">
       <div id="modal-content" class="modal">
