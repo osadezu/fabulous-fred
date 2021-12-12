@@ -1,39 +1,14 @@
-// Program constants
-const GEM_COLORS = [
-  '#FFDB3b',
-  '#8BC34A',
-  '#673AB7',
-  '#F43636',
-  '#00BCD4',
-  '#009688',
-  '#F436C5',
-  '#FFFF3B',
-  '#9C27B0',
-  '#FFA800',
-  '#3F51B5',
-  '#FF5722',
-];
-
-const STEP_DURATION = 400;
-const STEP_INTERVAL = STEP_DURATION + 250;
-
 // Global variables
 let challengeSequence = []; // Current round sequence
 let enteredSequence = []; // User-entered steps
 let stepQueue = []; // Temp buffer to play sequence
-let sequencePlayer = false; // Stores inerval handle
 let listeningState = false; // Track game input state
 
-// TODO: Create game states
-const gameSettings = {
-  numGems: 12,
-  insaneMode: false,
-  hintsLeft: 3,
-};
+let game = new Game();
 
-/****************************
- *  HTML element selectors  *
- ****************************/
+/**************************
+ *  DOM object selectors  *
+ **************************/
 
 // Containers
 const gameBoard = document.querySelector('#board');
@@ -48,43 +23,66 @@ const btnNumGems = document.querySelectorAll('#num-gems > .control-btn');
 const btnReset = document.querySelector('#reset > .control-btn');
 const btnPlay = document.querySelector('#play > .control-btn');
 
-// Event listener for user input
-gameBoard.addEventListener('click', (event) => {
-  if (listeningState && event.target.classList.contains('gem')) {
+// Enable or disable Gem user inputs
+function enableGemInputs() {
+  gameBoard.addEventListener('click', gemEventHandler);
+  // TODO: Change CSS class to enable :hover and :active
+}
+function disableGemInputs() {
+  gameBoard.removeEventListener('click', gemEventHandler);
+  // TODO: Change CSS class to disable :hover and :active
+}
+
+function gemEventHandler(event) {
+  if (event.target.classList.contains('gem')) {
     // Record gem id as int
     recordGemPress(parseInt(event.target.id));
   }
-});
+}
 
-// Event listeners for controls
-controlNumGems.addEventListener('click', (event) => {
+// Enable or disable changing game settings
+function enableControlInputs() {
+  controlNumGems.addEventListener('click', controlsEventHandler);
+  // TODO: Change CSS class to enable :hover and :active
+}
+function disableControlInputs() {
+  controlNumGems.removeEventListener('click', controlsEventHandler);
+  // TODO: Change CSS class to disable :hover and :active
+}
+
+function controlsEventHandler(event) {
+  // If button is not selected (disabled)
   if (
     !event.target.classList.contains('selected') &&
     event.target.classList.contains('control-btn')
   ) {
     // Change difficulty number of gems and generate buttons
-    gameSettings.numGems = parseInt(event.target.dataset.numGems);
+    game.numGems = parseInt(event.target.dataset.numGems);
     // Rebuild
     resetGame();
   }
-});
+}
 
-btnPlay.addEventListener('click', (event) => {
-  if (!event.target.classList.contains('selected')) {
-    // If button is not selected (ran out of hints)
-    if (!challengeSequence.length) {
-      // Sequence is zero, start game
-      btnPlay.innerText = `Cheat [${gameSettings.hintsLeft}]`;
-    } else if (gameSettings.hintsLeft > 1) {
-      btnPlay.innerText = `Cheat [${--gameSettings.hintsLeft}]`;
-    } else if (gameSettings.hintsLeft === 1) {
-      btnPlay.innerText = '¯\\_(ツ)_/¯';
-      event.target.classList.add('selected');
-    }
+// Enable or disable play buttons
+function enablePlayInputs() {
+  btnPlay.addEventListener('click', gameControlsEventHandler);
+  // TODO: Change CSS class to enable :hover and :active
+}
+function disablePlayInputs() {
+  btnPlay.removeEventListener('click', gameControlsEventHandler);
+  // TODO: Change CSS class to disable :hover and :active
+}
+
+function gameControlsEventHandler(event) {
+  // If button is not selected (disabled)
+  if (game.state === State.Ready) {
     startRound();
-  } // else: do nothing
-});
+  } else if (game.state === State.Listening) {
+    takeHint();
+  } // else: ran out of hints, do nothing
+}
 
+// Reset button is always active
 btnReset.addEventListener('click', resetGame);
 
 // Event listener to start game after load
@@ -102,39 +100,24 @@ function darkenGem(gem) {
   gem.classList.remove('bright');
 }
 
-function pulseGem(gem) {
+function flashGem(gem) {
   brightenGem(gem);
-  // TODO: Play tone
+  // TODO: Play tone?
   setTimeout(darkenGem, STEP_DURATION, gem);
 }
 
-// Refresh control button states
-function refreshControls() {
-  // Update button styling
-  btnNumGems.forEach((btn) => {
-    if (parseInt(btn.dataset.numGems) === gameSettings.numGems) {
-      btn.classList.add('selected');
-    } else {
-      btn.classList.remove('selected');
-    }
-  });
-
-  // Refresh Play button
-  btnPlay.innerText = 'Play!';
-  btnPlay.classList.remove('selected');
-}
-
 // Dynamic creation of buttons
-function changeNumGems(numGems) {
-  // Clear button elements
-  btnGems = [];
-  // Clear existing buttons
-  gameBoard.innerHTML = '';
+function createGems() {
+  // Flush existing buttons
+  while (btnGems.length) {
+    btnGems.pop().remove();
+  }
+
   // Set grid styling
-  gameBoard.classList = `num-gems-${numGems}`;
-  // console.log(gameB)
+  gameBoard.classList = `num-gems-${game.numGems}`;
+
   // Create new buttons
-  for (let i = 0; i < numGems; i++) {
+  for (let i = 0; i < game.numGems; i++) {
     // Create gem button
     const gem = document.createElement('button');
     gem.classList.add('gem');
@@ -149,32 +132,58 @@ function changeNumGems(numGems) {
   }
 }
 
-/********************
- *  Game Functions  *
- ********************/
+// Refresh control button displayed state
+function refreshControls() {
+  // Update button styling
+  btnNumGems.forEach((btn) => {
+    if (parseInt(btn.dataset.numGems) === game.numGems) {
+      btn.classList.add('selected');
+    } else {
+      btn.classList.remove('selected');
+    }
+  });
+
+  // Play button
+  if (game.state === State.Ready) {
+    // Game hasn't started
+    btnPlay.innerText = 'Play!';
+    btnPlay.classList.remove('selected');
+  } else if (game.hintsLeft > 0 && game.state !== State.Lost) {
+    // During play, show how many hints are left
+    btnPlay.innerText = `Cheat [${game.hintsLeft}]`;
+  } else {
+    // No hints left, disable button
+    btnPlay.innerText = '¯\\_(ツ)_/¯';
+    btnPlay.classList.add('selected');
+  }
+}
+
+// /********************
+//  *  Game Functions  *
+//  ********************/
 
 function resetGame() {
   // Clear states
   challengeSequence = [];
   enteredSequence = [];
   stepQueue = [];
-  listeningState = false;
-  display.value = 'HELLO!';
-  gameSettings.hintsLeft = 3;
 
-  // Clear interval
-  clearInterval(sequencePlayer);
-  sequencePlayer = false;
+  // Reset defaults
+  game.reset();
+
+  // Generate gameBoard buttons
+  createGems();
+
+  // TODO: move this to a display handling function
+  display.value = 'HELLO!';
+
+  // Set main state game
+  game.state = State.Ready;
 
   // Refresh controls display
   refreshControls();
-  // Generate game buttons
-  changeNumGems(gameSettings.numGems);
-
-  // TODO: Reshuffle buttons?
-
-  // Begin game
-  // startRound();
+  enableControlInputs();
+  enablePlayInputs();
 }
 
 function addRandomStep() {
@@ -185,12 +194,12 @@ function addRandomStep() {
 function sequenceStepper() {
   // Take one step from queue and pulse the gem
   const nextGem = btnGems[stepQueue.shift()];
-  pulseGem(nextGem);
+  flashGem(nextGem);
 
   // when queue is empty, clear interval
   if (!stepQueue.length) {
-    clearInterval(sequencePlayer);
-    sequencePlayer = false;
+    clearInterval(game.sequenceIterator);
+    game.sequenceIterator = null;
     readyToListen();
   }
 }
@@ -198,61 +207,90 @@ function sequenceStepper() {
 function triggerSequence() {
   // Copy steps to a temp buffer
   stepQueue = [...challengeSequence];
-  // console.log('Challenge:', stepQueue);
 
-  // Do first step without delay
-  sequenceStepper;
-  if (stepQueue.length && !sequencePlayer) {
-    // Only if there are steps in queue and no interval is set
+  if (!game.sequenceIterator) {
     // Start iterator
-    sequencePlayer = setInterval(sequenceStepper, STEP_INTERVAL);
+    game.sequenceIterator = setInterval(sequenceStepper, STEP_INTERVAL);
   }
 }
 
 function recordGemPress(gemId) {
   // Log user-pressed step
   enteredSequence.push(gemId);
+
   // Current place in sequence
-  let step = enteredSequence.length;
+  const step = enteredSequence.length;
+
   // Check if user sequence matches computer sequence
   if (challengeSequence[step - 1] !== gemId) {
-    // Incorrect step
-    // Stop listening
-    listeningState = false;
-    // TODO: Replace alert with modal
-    display.value = 'GAME OVER!';
-    refreshControls();
-    // TODO: flash the gem user missed
-
-    // resetGame();
+    // Incorrect step, game over
+    lose();
   } else if (step === challengeSequence.length) {
-    // Full sequence matched, generate new sequence
-    display.value = 'GREAT!';
-    // TODO: do something to notify user he was correct
+    // Full sequence matched
 
+    // TODO: do something to notify user he was correct
+    display.value = 'GREAT!';
+
+    // Continue to next round
     startRound();
   }
 }
 
+function lose() {
+  // Set game state
+  game.state = State.Lost;
+
+  // Disable game buttons
+  disableGemInputs();
+
+  // TODO: flash the gem user missed
+
+  // Stop listening
+  display.value = 'GAME OVER!';
+
+  refreshControls();
+}
+
 function readyToListen() {
-  // Enable input
-  listeningState = true;
+  // Set game state
+  game.state = State.Listening;
+
+  // Reset user sequence
+  enteredSequence = [];
+
+  // Enable game buttons
+  enableGemInputs();
+  enablePlayInputs();
+
   // Display text
   display.value = `GIVE ME ${challengeSequence.length}!`;
-  // TODO: Notify user it's his turn
+}
+
+function takeHint() {
+  // Decrement hints counter
+  game.hintsLeft--;
+  refreshControls();
+
+  startRound();
 }
 
 function startRound() {
-  // Disable input
-  listeningState = false;
-  // Reset user sequence
-  enteredSequence = [];
+  // Set game state
+  game.state = State.Showing;
+
+  // Disable inputs
+  disableGemInputs();
+  disableControlInputs();
+  disablePlayInputs();
+  refreshControls();
+
   // TODO: Move all Display text to a single display handler function
   if (challengeSequence.length < 1) {
     display.value = "LET'S GO!";
   } else if (challengeSequence.length % 3 === 0) {
     display.value = "LET'S SEE...";
   }
+
   // Add a step to the sequence queue
   addRandomStep();
   // Trigger sequence
@@ -260,7 +298,7 @@ function startRound() {
 }
 
 // TODO: imrpove interval with Promise delay chain?
-/* 
+/*
 // https://stackoverflow.com/questions/41079410/delays-between-promises-in-promise-chain
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 let parameterArr = ['a', 'b', 'c', 'd', 'e', 'f'];
@@ -270,4 +308,5 @@ parameterArr.reduce(function (promise, item) {
     return Promise.all([delay(50), myPromise(item)]);
   });
 }, Promise.resolve());
+
  */
