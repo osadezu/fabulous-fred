@@ -205,6 +205,8 @@ button:active {
 .gem.disabled:active {
   cursor: not-allowed;
   border: 0.01rem solid #212121;
+  box-shadow: 0 var(--btn-height) #212121;
+  transform: translateY(calc(-1 * var(--btn-height)));
 }
 
 .control-btn.disabled,
