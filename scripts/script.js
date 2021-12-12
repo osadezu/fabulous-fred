@@ -207,21 +207,27 @@ function addRandomStep() {
 
 function sequenceStepper() {
   // Take one step from queue and pulse the gem
-  const nextGem = btnGems[stepQueue.shift()];
-  flashGem(nextGem);
+  const nextStep = stepQueue.shift();
 
-  // when queue is empty, clear interval
-  if (!stepQueue.length) {
+  // Trigger flash if nextStep is not null
+  if (nextStep !== null) {
+    const nextGem = btnGems[nextStep];
+    flashGem(nextGem);
+  } else {
+    // Null read, end iterator
     clearInterval(game.sequenceIterator);
     game.sequenceIterator = null;
-    // Wait for last flash
-    setTimeout(readyToListen, STEP_INTERVAL);
+    readyToListen();
   }
 }
 
 function triggerSequence() {
   // Copy steps to a temp buffer
   stepQueue = [...challengeSequence];
+
+  // Append null element to indicate end of sequence
+  // Final interval while flashing ends
+  stepQueue.push(null);
 
   if (!game.sequenceIterator) {
     // Start iterator
