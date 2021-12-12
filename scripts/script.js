@@ -26,11 +26,17 @@ const btnPlay = document.querySelector('#play > .control-btn');
 // Enable or disable Gem user inputs
 function enableGemInputs() {
   gameBoard.addEventListener('click', gemEventHandler);
-  // TODO: Change CSS class to enable :hover and :active
+  // Remove disabled style
+  btnGems.forEach((btn) => {
+    btn.classList.remove('disabled');
+  });
 }
 function disableGemInputs() {
   gameBoard.removeEventListener('click', gemEventHandler);
-  // TODO: Change CSS class to disable :hover and :active
+  // Add disabled style
+  btnGems.forEach((btn) => {
+    btn.classList.add('disabled');
+  });
 }
 
 function gemEventHandler(event) {
@@ -43,15 +49,21 @@ function gemEventHandler(event) {
 // Enable or disable changing game settings
 function enableControlInputs() {
   controlNumGems.addEventListener('click', controlsEventHandler);
-  // TODO: Change CSS class to enable :hover and :active
+  // Remove disabled style
+  btnNumGems.forEach((btn) => {
+    btn.classList.remove('disabled');
+  });
 }
 function disableControlInputs() {
   controlNumGems.removeEventListener('click', controlsEventHandler);
-  // TODO: Change CSS class to disable :hover and :active
+  // Add disabled style
+  btnNumGems.forEach((btn) => {
+    btn.classList.add('disabled');
+  });
 }
 
 function controlsEventHandler(event) {
-  // If button is not selected (disabled)
+  // If button is not selected
   if (
     !event.target.classList.contains('selected') &&
     event.target.classList.contains('control-btn')
@@ -66,11 +78,13 @@ function controlsEventHandler(event) {
 // Enable or disable play buttons
 function enablePlayInputs() {
   btnPlay.addEventListener('click', gameControlsEventHandler);
-  // TODO: Change CSS class to enable :hover and :active
+  // Remove disabled style
+  btnPlay.classList.remove('disabled');
 }
 function disablePlayInputs() {
   btnPlay.removeEventListener('click', gameControlsEventHandler);
-  // TODO: Change CSS class to disable :hover and :active
+  // Add disabled style
+  btnPlay.classList.add('disabled');
 }
 
 function gameControlsEventHandler(event) {
@@ -147,14 +161,14 @@ function refreshControls() {
   if (game.state === State.Ready) {
     // Game hasn't started
     btnPlay.innerText = 'Play!';
-    btnPlay.classList.remove('selected');
+    btnPlay.classList.remove('disabled');
   } else if (game.hintsLeft > 0 && game.state !== State.Lost) {
     // During play, show how many hints are left
     btnPlay.innerText = `Cheat [${game.hintsLeft}]`;
   } else {
     // No hints left, disable button
     btnPlay.innerText = '¯\\_(ツ)_/¯';
-    btnPlay.classList.add('selected');
+    btnPlay.classList.add('disabled');
   }
 }
 
@@ -200,7 +214,8 @@ function sequenceStepper() {
   if (!stepQueue.length) {
     clearInterval(game.sequenceIterator);
     game.sequenceIterator = null;
-    readyToListen();
+    // Wait for last flash
+    setTimeout(readyToListen, STEP_INTERVAL);
   }
 }
 
