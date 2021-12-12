@@ -40,6 +40,8 @@ const GEM_COLORS = [
 const HINTS = 3;
 const STEP_DURATION = 400;
 const STEP_INTERVAL = STEP_DURATION + 250;
+const SHORT_DURATION = 175;
+const SHORT_INTERVAL = SHORT_DURATION + 175;
 
 // Game Settings
 class Game {

@@ -23,7 +23,7 @@ const btnNumGems = document.querySelectorAll('#num-gems > .control-btn');
 const btnReset = document.querySelector('#reset > .control-btn');
 const btnPlay = document.querySelector('#play > .control-btn');
 
-// Enable or disable Gem user inputs
+// Enable Gem user inputs
 function enableGemInputs() {
   gameBoard.addEventListener('click', gemEventHandler);
   // Remove disabled style
@@ -31,6 +31,8 @@ function enableGemInputs() {
     btn.classList.remove('disabled');
   });
 }
+
+// Disable Gem user inputs
 function disableGemInputs() {
   gameBoard.removeEventListener('click', gemEventHandler);
   // Add disabled style
@@ -46,7 +48,7 @@ function gemEventHandler(event) {
   }
 }
 
-// Enable or disable changing game settings
+// Enable changing game settings
 function enableControlInputs() {
   controlNumGems.addEventListener('click', controlsEventHandler);
   // Remove disabled style
@@ -54,6 +56,8 @@ function enableControlInputs() {
     btn.classList.remove('disabled');
   });
 }
+
+// Disable changing game settings
 function disableControlInputs() {
   controlNumGems.removeEventListener('click', controlsEventHandler);
   // Add disabled style
@@ -75,12 +79,14 @@ function controlsEventHandler(event) {
   }
 }
 
-// Enable or disable play buttons
+// Enable play buttons
 function enablePlayInputs() {
   btnPlay.addEventListener('click', gameControlsEventHandler);
   // Remove disabled style
   btnPlay.classList.remove('disabled');
 }
+
+// Disable play buttons
 function disablePlayInputs() {
   btnPlay.removeEventListener('click', gameControlsEventHandler);
   // Add disabled style
@@ -99,7 +105,7 @@ function gameControlsEventHandler(event) {
 // Reset button is always active
 btnReset.addEventListener('click', resetGame);
 
-// Event listener to start game after load
+// Event listener to init game after load
 document.addEventListener('DOMContentLoaded', resetGame);
 
 /********************
@@ -114,10 +120,10 @@ function darkenGem(gem) {
   gem.classList.remove('bright');
 }
 
-function flashGem(gem) {
+function flashGem(gem, duration) {
   brightenGem(gem);
   // TODO: Play tone?
-  setTimeout(darkenGem, STEP_DURATION, gem);
+  setTimeout(darkenGem, duration, gem);
 }
 
 // Dynamic creation of buttons
@@ -161,14 +167,14 @@ function refreshControls() {
   if (game.state === State.Ready) {
     // Game hasn't started
     btnPlay.innerText = 'Play!';
-    btnPlay.classList.remove('disabled');
+    enablePlayInputs();
   } else if (game.hintsLeft > 0 && game.state !== State.Lost) {
     // During play, show how many hints are left
     btnPlay.innerText = `Cheat [${game.hintsLeft}]`;
   } else {
     // No hints left, disable button
     btnPlay.innerText = '¯\\_(ツ)_/¯';
-    btnPlay.classList.add('disabled');
+    disablePlayInputs();
   }
 }
 
@@ -205,25 +211,41 @@ function addRandomStep() {
   challengeSequence.push(Math.floor(Math.random() * btnGems.length));
 }
 
-function sequenceStepper() {
+function sequenceDone() {
+  if (game.state === State.Showing) {
+    // Normal play
+    readyToListen();
+  } else if (game.state === State.Lost) {
+    // After incorrect sequence
+    lose();
+  }
+}
+
+function sequenceStepper(stepDuration) {
   // Take one step from queue and pulse the gem
   const nextStep = stepQueue.shift();
 
   // Trigger flash if nextStep is not null
   if (nextStep !== null) {
     const nextGem = btnGems[nextStep];
-    flashGem(nextGem);
+    flashGem(nextGem, stepDuration);
   } else {
     // Null read, end iterator
     clearInterval(game.sequenceIterator);
     game.sequenceIterator = null;
-    readyToListen();
+    sequenceDone();
   }
 }
 
-function triggerSequence() {
+// Trigger flashing sequence
+// If no sequence is given, trigger main play sequence
+function triggerSequence(
+  sequence = challengeSequence,
+  interval = STEP_INTERVAL,
+  duration = STEP_DURATION
+) {
   // Copy steps to a temp buffer
-  stepQueue = [...challengeSequence];
+  stepQueue = [...sequence];
 
   // Append null element to indicate end of sequence
   // Final interval while flashing ends
@@ -231,7 +253,7 @@ function triggerSequence() {
 
   if (!game.sequenceIterator) {
     // Start iterator
-    game.sequenceIterator = setInterval(sequenceStepper, STEP_INTERVAL);
+    game.sequenceIterator = setInterval(sequenceStepper, interval, duration);
   }
 }
 
@@ -244,8 +266,13 @@ function recordGemPress(gemId) {
 
   // Check if user sequence matches computer sequence
   if (challengeSequence[step - 1] !== gemId) {
-    // Incorrect step, game over
-    lose();
+    // Incorrect step entered
+
+    // Set game state
+    game.state = State.Lost;
+
+    // Flash incorrect step, then game over
+    incorrectStep(challengeSequence[step - 1]);
   } else if (step === challengeSequence.length) {
     // Full sequence matched
 
@@ -257,14 +284,14 @@ function recordGemPress(gemId) {
   }
 }
 
-function lose() {
-  // Set game state
-  game.state = State.Lost;
+function incorrectStep(gemId) {
+  const gameOverSequence = [gemId, gemId, gemId];
+  triggerSequence(gameOverSequence, SHORT_INTERVAL, SHORT_DURATION);
+}
 
+function lose() {
   // Disable game buttons
   disableGemInputs();
-
-  // TODO: flash the gem user missed
 
   // Stop listening
   display.value = 'GAME OVER!';
@@ -281,7 +308,10 @@ function readyToListen() {
 
   // Enable game buttons
   enableGemInputs();
-  enablePlayInputs();
+  if (game.hintsLeft > 0) {
+    // Only if user has hints left
+    enablePlayInputs();
+  }
 
   // Display text
   display.value = `GIVE ME ${challengeSequence.length}!`;
