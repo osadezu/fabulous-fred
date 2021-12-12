@@ -6,10 +6,6 @@
   font-family: 'Roses are FF0000';
   src: url(./fonts/roses-are-ff0000/RosesareFF0000.ttf) format('truetype');
 }
-@font-face {
-  font-family: 'lcd phone';
-  src: url(./fonts/lcd-phone/LCDPHONE.ttf) format('truetype');
-}
 
 :root {
   --btn-height: 0.7rem;
