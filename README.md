@@ -3,25 +3,28 @@
 ## About
 
 A memory game inspired by the ultimate electronic game from the 1980s.
+
 The game is played in the same way as Simon Says, where the computer lights up a random sequence of buttons that the user has to repeat by memory. The sequence keeps getting longer until the user presses the wrong button.
+
+### Inspiration
+
+![Original 'Fabuloso Fred 20' from the 1980s](./planning/reference/Fabuloso-Fred-20.jpg)[^source]
 
 ### How to play:
 
 - Select a difficulty level, the UI will refresh to show the number of buttons.
-- Hit 'Play!', the computer will challenge you with a sequence.
+- Hit _Play!_, the computer will challenge you with a sequence.
 - Repeat the sequence. If you get it right, the computer will repeat the sequence adding one new step.
 - If you forget a step, you have 3 chances to cheat. _But beware: the sequence keeps getting longer!_
 - If you lose, the computer will flash the key you missed.
 - Start over any time by hitting that _Fat Reset Button_!
 
-## Deployment
-
-Play it [here](https://osadezu.github.io/fabulous-fred/)!
+## Play it [here](https://osadezu.github.io/fabulous-fred/)!
 
 ## Game Screenshots
 
-![View of main play screen](./assets/fabulous-fred-screenshot-01.png)
-![View of play screen with 8 buttons and illuminated gem](./assets/fabulous-fred-screenshot-02.png)
+![View of main play screen](./planning/screenshots/fabulous-fred-screenshot-01.png)
+![View of play screen with 8 buttons and illuminated gem](./planning/screenshots/fabulous-fred-screenshot-02.png)
 
 ## Technologies Used
 
@@ -50,7 +53,17 @@ Play it [here](https://osadezu.github.io/fabulous-fred/)!
   - Implement multiuser mode for 2-4 users to play together against the computer.
   - Implement a play mode in which two users challenge each other.
 
-## User Stories
+## Planning
+
+### Wireframes
+
+Game UI for difficulty level: medium (9 buttons)
+![wireframe-01](./planning/wireframes/wireframe-01.png)
+
+Game UI for difficulty level: hard (16 buttons, all colors not shown).
+![wireframe-02](./planning/wireframes/wireframe-02.png)
+
+### User Stories
 
 - [x] As a user, I want to choose the difficulty level (possible colors in the sequence) so that the game becomes more challenging.
 - [x] As a user, I want a dynamic and reactive play experience that keeps me engaged.
@@ -62,3 +75,5 @@ Play it [here](https://osadezu.github.io/fabulous-fred/)!
 - [ ] As a user, I want to select how many human players will be included, so that I can play with my friends.
 - [ ] As a user, I want to be able to play 1:1 against a friend in which we challenge each other instead of playing against the computer.
 - [ ] As a user I want the game to display the colors through my smart lighting system so that it becomes more engaging when my friends and I are playing in my living room.
+
+[^source]: http://www.wikimexico.com/articulo/De-ensueno-El-fabuloso-Fred
