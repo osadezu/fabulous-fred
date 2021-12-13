@@ -228,7 +228,7 @@ button:active {
 .gem.bright,
 .gem.bright:hover,
 .gem.bright:active {
-  border: 0.15rem solid #f5f5f5;
+  border: 0.3rem solid #f5f5f5;
   box-shadow: 0 0.7rem #f5f5f5;
 }
 
