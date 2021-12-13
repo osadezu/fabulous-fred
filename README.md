@@ -55,6 +55,8 @@ https://osadezu.github.io/fabulous-fred/
   - Implement 'insane mode' in which the buttons are reshuffled after every round and the user must memorize colors (not locations).
   - Implement multi-user mode for 2-4 users to play together against the computer.
   - Implement a play mode in which two users challenge each other.
+- Functionality
+  - Improve sequence display with promises to simplify logic and have a more reactive UI.
 
 ## Planning
 
@@ -78,5 +80,12 @@ Game UI for difficulty level: hard (16 buttons, all colors not shown).
 - [ ] As a user, I want to select how many users will be involved, so that I can play with my friends.
 - [ ] As a user, I want to be able to play 1:1 against a friend so that we can challenge each other instead of playing against the computer.
 - [ ] As a user I want the game to display the colors through my smart lighting system so that it becomes more engaging when my friends and I are playing in my living room.
+
+### Issues
+
+- Major challenges
+  - CSS styles became quite complicated to be able to display interaction and different game states.
+  - Displaying the challenge sequence, which involves delays, while keeping the UI updated and in sync with the game state greatly increased the program logic.
+  - Similar to the sequence display and timing, developing the LCD screen handler to present dynamic and timely messages will be challenging.
 
 [^source]: http://www.wikimexico.com/articulo/De-ensueno-El-fabuloso-Fred
