@@ -4,11 +4,10 @@
 
 // Enum for Game States
 class State {
-  // static Idle = new State('idle');
+  static Idle = new State('idle');
   static Ready = new State('ready');
   static Showing = new State('showing');
   static Listening = new State('listening');
-  static Configuring = new State('configuring');
   static Lost = new State('lost');
 
   constructor(name) {
@@ -29,7 +28,7 @@ const GEM_COLORS = [
   '#00BCD4',
   '#009688',
   '#F436C5',
-  '#FFFF3B',
+  '#FFFF58',
   '#9C27B0',
   '#FFA800',
   '#3F51B5',
@@ -40,8 +39,8 @@ const GEM_COLORS = [
 const HINTS = 3;
 const STEP_DURATION = 400;
 const STEP_INTERVAL = STEP_DURATION + 250;
-const SHORT_DURATION = 175;
-const SHORT_INTERVAL = SHORT_DURATION + 175;
+const SHORT_DURATION = 200;
+const SHORT_INTERVAL = SHORT_DURATION + 200;
 
 // Game Settings
 class Game {

@@ -99,7 +99,10 @@ function gameControlsEventHandler(event) {
     startRound();
   } else if (game.state === State.Listening) {
     takeHint();
-  } // else: ran out of hints, do nothing
+  } else if (game.state === State.Idle) {
+    resetGame();
+    startRound();
+  }
 }
 
 // Reset button is always active
@@ -154,7 +157,7 @@ function createGems() {
 
 // Refresh control button displayed state
 function refreshControls() {
-  // Update button styling
+  // Update Control Inputs (numGem) button styling
   btnNumGems.forEach((btn) => {
     if (parseInt(btn.dataset.numGems) === game.numGems) {
       btn.classList.add('selected');
@@ -163,18 +166,42 @@ function refreshControls() {
     }
   });
 
-  // Play button
+  // Control inputs enabled/disabled status
+  if (game.state === State.Showing || game.state === State.Listening) {
+    disableControlInputs();
+  } else {
+    enableControlInputs();
+  }
+
+  // Play button Text
   if (game.state === State.Ready) {
     // Game hasn't started
     btnPlay.innerText = 'Play!';
-    enablePlayInputs();
-  } else if (game.hintsLeft > 0 && game.state !== State.Lost) {
+  } else if (game.hintsLeft > 0 && game.state !== State.Idle) {
     // During play, show how many hints are left
     btnPlay.innerText = `Cheat [${game.hintsLeft}]`;
-  } else {
+  } else if (game.state !== State.Idle) {
     // No hints left, disable button
     btnPlay.innerText = '¯\\_(ツ)_/¯';
+  } else {
+    // If game over
+    btnPlay.innerText = 'Play again!';
+  }
+
+  // Play button enabled/disabled status
+  if (game.state === State.Showing) {
     disablePlayInputs();
+  } else if (game.hintsLeft === 0 && game.state !== State.Idle) {
+    disablePlayInputs();
+  } else {
+    enablePlayInputs();
+  }
+
+  // Control gem buttons enabled/disabled status
+  if (game.state === State.Showing) {
+    disableGemInputs();
+  } else {
+    enableGemInputs();
   }
 }
 
@@ -202,8 +229,6 @@ function resetGame() {
 
   // Refresh controls display
   refreshControls();
-  enableControlInputs();
-  enablePlayInputs();
 }
 
 function addRandomStep() {
@@ -258,6 +283,9 @@ function triggerSequence(
 }
 
 function recordGemPress(gemId) {
+  if (game.state !== State.Listening) {
+    return; // Do nothing
+  }
   // Log user-pressed step
   enteredSequence.push(gemId);
 
@@ -285,13 +313,14 @@ function recordGemPress(gemId) {
 }
 
 function incorrectStep(gemId) {
+  // Flash missed gem
   const gameOverSequence = [gemId, gemId, gemId];
   triggerSequence(gameOverSequence, SHORT_INTERVAL, SHORT_DURATION);
 }
 
 function lose() {
-  // Disable game buttons
-  disableGemInputs();
+  // Set game state
+  game.state = State.Idle;
 
   // Stop listening
   display.value = 'GAME OVER!';
@@ -307,11 +336,8 @@ function readyToListen() {
   enteredSequence = [];
 
   // Enable game buttons
-  enableGemInputs();
-  if (game.hintsLeft > 0) {
-    // Only if user has hints left
-    enablePlayInputs();
-  }
+  // enableGemInputs();
+  refreshControls();
 
   // Display text
   display.value = `GIVE ME ${challengeSequence.length}!`;
@@ -330,9 +356,7 @@ function startRound() {
   game.state = State.Showing;
 
   // Disable inputs
-  disableGemInputs();
-  disableControlInputs();
-  disablePlayInputs();
+  // disableGemInputs();
   refreshControls();
 
   // TODO: Move all Display text to a single display handler function
@@ -344,11 +368,12 @@ function startRound() {
 
   // Add a step to the sequence queue
   addRandomStep();
+
   // Trigger sequence
   triggerSequence();
 }
 
-// TODO: imrpove interval with Promise delay chain?
+// TODO: imrpove intervals and display sequence completion with Promise delay chain?
 /*
 // https://stackoverflow.com/questions/41079410/delays-between-promises-in-promise-chain
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
