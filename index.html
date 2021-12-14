@@ -19,33 +19,30 @@
     </header>
     <main>
       <div id="console">
+        <div class="console-controls" id="top-console-controls">
+          <input type="text" class="lcd" readonly placeholder="HELLO THERE!" />
+        </div>
         <div id="board">
           <!-- <button class="gem"></button> -->
         </div>
+        <div class="console-controls" id="bottom-console-controls">
+          <button class="control-btn console stretch" id="play-control">
+            Play!
+          </button>
+        </div>
       </div>
       <aside>
-        <div class="controls" id="top-controls">
-          <fieldset id="display">
-            <legend>Fred&nbsp;Says:</legend>
-            <input
-              type="text"
-              class="lcd"
-              readonly
-              placeholder="HELLO THERE!"
-              size="12"
-            />
-            <!-- <button class="control-btn stretch">Play!</button> -->
-          </fieldset>
+        <div class="controls" id="side-controls">
           <fieldset id="num-gems">
             <legend>Difficulty&nbsp;Level</legend>
             <button class="control-btn" data-num-gems="4">4</button>
             <button class="control-btn" data-num-gems="8">8</button>
             <button class="control-btn" data-num-gems="12">12</button>
           </fieldset>
-          <fieldset id="play">
-            <legend>Game&nbsp;Controls</legend>
-            <button class="control-btn stretch">Play!</button>
-          </fieldset>
+          <!-- <fieldset id="insane">
+            <legend>Game&nbsp;Mode</legend>
+            <button class="control-btn insane stretch">Insane</button>
+          </fieldset> -->
           <fieldset id="reset">
             <legend>Fat Reset Button</legend>
             <button class="control-btn stretch">(╯°□°)╯︵ ┻━┻</button>

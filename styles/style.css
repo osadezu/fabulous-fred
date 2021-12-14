@@ -8,7 +8,8 @@
 }
 
 :root {
-  --btn-height: 0.7rem;
+  --btn-height: 0.5rem;
+  --board-margin: 0.9rem;
 }
 
 html {
@@ -36,13 +37,13 @@ h1 {
 }
 
 h2 {
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   font-weight: 300;
   margin-bottom: 1rem;
 }
 
 header h2 {
-  margin-top: -1rem;
+  margin-top: -0.5rem;
 }
 
 a {
@@ -51,14 +52,12 @@ a {
 }
 
 a:hover {
-  /* color: tomato; */
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }
 
 main {
   margin: 0 auto;
-  /* background-color: #efebe9; */
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
@@ -66,78 +65,25 @@ main {
 }
 
 #console {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/******  Controls  ******/
-
-input.lcd {
-  /* font-family: 'lcd phone', 'Bitwise', 'Courier New', Courier, monospace; */
-  font-family: 'Roses are FF0000', 'Bitwise', 'Courier New', Courier, monospace;
-  font-size: 1.2rem;
-  text-align: center;
-  height: 2rem;
-  margin-top: -0.6rem;
-  background-color: #4caf50;
-  color: #424242;
-  pointer-events: none;
-}
-
-fieldset#display {
-  padding: 0.5rem 0.2rem;
-}
-
-.controls {
-  margin: 1rem;
-  padding: 1rem;
+  height: 71vh;
+  aspect-ratio: 0.6;
+  border: 2rem outset #efebe9;
+  border-top: 1.5rem outset #efebe9;
+  border-bottom: 1.5rem outset #efebe9;
+  border-radius: 1.5rem;
+  background-color: #1976d2;
   display: flex;
   flex-direction: column;
   align-items: stretch;
 }
 
-.controls fieldset {
-  padding: 1rem;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-around;
-}
-
-.control-btn {
-  height: 2.5rem;
-  aspect-ratio: 1/1;
-  background-color: #efebe9;
-  -webkit-filter: brightness(90%);
-  filter: brightness(90%);
-}
-
-.control-btn.stretch {
-  aspect-ratio: initial;
-}
-
-.control-btn.selected {
-  -webkit-filter: brightness(100%);
-  filter: brightness(100%);
-}
-
-.control-btn:hover {
-  border-color: gold;
-  -webkit-filter: brightness(100%);
-  filter: brightness(100%);
-}
-
 /******  Game Board  ******/
 
 #board {
-  border: 2.5rem outset #efebe9;
-  border-radius: 2rem;
-  height: 70vh;
-  aspect-ratio: 3/4;
-  background-color: #1976d2;
+  flex-grow: 1;
   display: grid;
-  padding: 1.2rem;
-  gap: 1.2rem;
+  padding: var(--board-margin);
+  gap: var(--board-margin);
   justify-items: center;
   justify-content: space-evenly;
   align-items: center;
@@ -162,6 +108,81 @@ fieldset#display {
   grid-template-rows: repeat(2, 1fr);
 }
 
+/******  Controls  ******/
+
+.console-controls {
+  height: 2.75rem;
+  padding: 0 var(--board-margin);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#top-console-controls {
+  padding-top: var(--board-margin);
+}
+
+#bottom-console-controls {
+  padding-bottom: var(--board-margin);
+}
+
+input.lcd {
+  font-family: 'Roses are FF0000', 'Bitwise', 'Courier New', Courier, monospace;
+  font-size: 0.9rem;
+  text-align: center;
+  height: 1.75rem;
+  width: 100%;
+  background-color: #4caf50;
+  color: #424242;
+  pointer-events: none;
+}
+
+#side-controls {
+  margin: 1rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+#side-controls fieldset {
+  padding: 1rem;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.control-btn {
+  height: 2.5rem;
+  aspect-ratio: 1/1;
+  background-color: #efebe9;
+  -webkit-filter: brightness(90%);
+  filter: brightness(90%);
+}
+
+.control-btn.console {
+  height: 1.75rem;
+  width: 100%;
+  aspect-ratio: initial;
+}
+
+.control-btn.stretch {
+  aspect-ratio: initial;
+}
+
+.control-btn.selected {
+  -webkit-filter: brightness(100%);
+  filter: brightness(100%);
+}
+
+.control-btn:hover {
+  border-color: gold;
+  -webkit-filter: brightness(100%);
+  filter: brightness(100%);
+}
+
 /******  Game Board Buttons  ******/
 
 .gem {
@@ -177,7 +198,7 @@ button {
   cursor: pointer;
   text-align: center;
   text-decoration: none;
-  border-radius: 0.2rem;
+  border-radius: 0.25rem;
   border: 0.01rem solid #212121;
   box-shadow: 0 var(--btn-height) #212121;
   transform: translateY(calc(-1 * var(--btn-height)));
@@ -185,13 +206,10 @@ button {
 
 button:hover {
   border: 0.05rem solid #f5f5f5;
-  /* box-shadow: 0 0.7rem #f5f5f5; */
-  /* filter: brightness(2); */
 }
 
 button.selected,
 button:active {
-  /* border: 0.15rem solid #f5f5f5; */
   box-shadow: 0 0.2rem #f5f5f5;
   transform: translateY(-0.2rem);
 }
@@ -228,8 +246,8 @@ button:active {
 .gem.bright,
 .gem.bright:hover,
 .gem.bright:active {
-  border: 0.3rem solid #f5f5f5;
-  box-shadow: 0 0.7rem #f5f5f5;
+  border: 0.2rem solid #f5f5f5;
+  box-shadow: 0 var(--btn-height) #f5f5f5;
 }
 
 /******  Modal  ******/
@@ -248,7 +266,6 @@ button:active {
   justify-content: center;
   align-items: center;
   visibility: hidden;
-  /* transition: visibility 1.5s ease; */
 }
 
 #modal-content {
