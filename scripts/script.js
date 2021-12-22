@@ -21,7 +21,7 @@ const display = document.querySelector('.lcd');
 let btnGems = []; // Created dynamically
 const btnNumGems = document.querySelectorAll('#num-gems > .control-btn');
 const btnReset = document.querySelector('#reset > .control-btn');
-const btnPlay = document.querySelector('#play > .control-btn');
+const btnPlay = document.querySelector('#play-control');
 
 // Enable Gem user inputs
 function enableGemInputs() {
