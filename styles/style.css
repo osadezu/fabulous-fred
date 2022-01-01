@@ -68,7 +68,8 @@ main {
 
 #console {
   height: 71vh;
-  aspect-ratio: 0.6;
+  width: calc(71vh * 0.6);
+  /* aspect-ratio: 0.6; */
   border: 2rem outset #efebe9;
   border-top: 1.5rem outset #efebe9;
   border-bottom: 1.5rem outset #efebe9;
@@ -77,6 +78,14 @@ main {
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  /* Disable double-tap zoom in mobile
+  https://stackoverflow.com/questions/10614481/disable-double-tap-zoom-option-in-browser-on-touch-devices */
+  touch-action: manipulation;
+}
+
+aside {
+  /* position: relative; */
+  left: calc(71vh * 0.6 / 2);
 }
 
 /******  Game Board  ******/
@@ -90,9 +99,6 @@ main {
   justify-content: space-evenly;
   align-items: center;
   align-content: space-evenly;
-  /* Disable double-tap zoom in mobile
-  https://stackoverflow.com/questions/10614481/disable-double-tap-zoom-option-in-browser-on-touch-devices */
-  /* touch-action: manipulation; */
 }
 
 #board.num-gems-12 {
@@ -135,6 +141,7 @@ input.lcd {
   text-align: center;
   height: 1.75rem;
   width: 100%;
+  border: 2px inset grey;
   background-color: #4caf50;
   color: #424242;
   pointer-events: none;
@@ -160,7 +167,8 @@ input.lcd {
 
 .control-btn {
   height: 2.5rem;
-  aspect-ratio: 1/1;
+  width: 2.5rem;
+  /* aspect-ratio: 1/1; */
   background-color: #efebe9;
   -webkit-filter: brightness(90%);
   filter: brightness(90%);
@@ -169,11 +177,11 @@ input.lcd {
 .control-btn.console {
   height: 1.75rem;
   width: 100%;
-  aspect-ratio: initial;
 }
 
 .control-btn.stretch {
-  aspect-ratio: initial;
+  width: initial;
+  padding: 0 0.5rem;
 }
 
 .control-btn.selected {
@@ -196,16 +204,17 @@ input.lcd {
 
 /******  General Button Styling  ******/
 
-/* clip-path: polygon(0 0, 100% 0%, 100% 80%, 60% 100%, 0 100%); */
-
 button {
   cursor: pointer;
   text-align: center;
   text-decoration: none;
+  padding: 0;
   border-radius: 0.25rem;
   border: 0.01rem solid #212121;
   box-shadow: 0 var(--btn-height) #212121;
   transform: translateY(calc(-1 * var(--btn-height)));
+  text-align: center;
+  color: rgba(0, 0, 0, 0.847);
 }
 
 button:hover {
