@@ -40,11 +40,8 @@ h1 {
 h2 {
   font-size: 1.4rem;
   font-weight: 300;
-  margin-bottom: 1rem;
-}
-
-header h2 {
   margin-top: -0.5rem;
+  margin-bottom: 1rem;
 }
 
 a {
@@ -60,101 +57,57 @@ a:hover {
 main {
   margin: 0 auto;
   position: relative;
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  grid-template-columns: minmax(10%, 1fr) auto minmax(10%, 1fr);
 }
 
-#console {
-  height: 71vh;
-  width: calc(71vh * 0.6);
-  /* aspect-ratio: 0.6; */
-  border: 2rem outset #efebe9;
-  border-top: 1.5rem outset #efebe9;
-  border-bottom: 1.5rem outset #efebe9;
-  border-radius: 1.5rem;
-  background-color: #1976d2;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  /* Disable double-tap zoom in mobile
-  https://stackoverflow.com/questions/10614481/disable-double-tap-zoom-option-in-browser-on-touch-devices */
-  touch-action: manipulation;
+/******  Side Controls  ******/
+
+/**  Wide Layout  **/
+
+aside,
+div.dummy {
+  flex: 1 0;
 }
 
 aside {
-  /* position: relative; */
-  left: calc(71vh * 0.6 / 2);
-}
-
-/******  Game Board  ******/
-
-#board {
-  flex-grow: 1;
-  display: grid;
-  padding: var(--board-margin);
-  gap: var(--board-margin);
-  justify-items: center;
-  justify-content: space-evenly;
-  align-items: center;
-  align-content: space-evenly;
-}
-
-#board.num-gems-12 {
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(4, 1fr);
-}
-
-#board.num-gems-8 {
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(4, 1fr);
-}
-
-#board.num-gems-4 {
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-}
-
-/******  Controls  ******/
-
-.console-controls {
-  height: 2.75rem;
-  padding: 0 var(--board-margin);
+  padding-right: 0;
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  align-items: center;
-}
-
-#top-console-controls {
-  padding-top: var(--board-margin);
-}
-
-#bottom-console-controls {
-  padding-bottom: var(--board-margin);
-}
-
-input.lcd {
-  font-family: 'Roses are FF0000', 'Bitwise', 'Courier New', Courier, monospace;
-  font-size: 0.9rem;
-  text-align: center;
-  height: 1.75rem;
-  width: 100%;
-  border: 2px inset grey;
-  background-color: #4caf50;
-  color: #424242;
-  pointer-events: none;
 }
 
 #side-controls {
-  padding: 1.5rem;
-  width: 100%;
-  height: 100%;
+  margin: 1.25rem 2rem;
   display: flex;
   flex-flow: column nowrap;
   align-items: stretch;
   justify-content: center;
+}
+
+/**  Skinny Layout  **/
+
+@media (orientation: portrait), (max-width: 1200px) {
+  h1 {
+    font-size: 2.25rem;
+    font-weight: 900;
+  }
+
+  h2 {
+    font-size: 1.1rem;
+    font-weight: 300;
+  }
+
+  main {
+    margin: 0 auto;
+    position: relative;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+  }
+
+  div.dummy {
+    display: none;
+  }
 }
 
 #side-controls fieldset {
@@ -193,6 +146,82 @@ input.lcd {
   border-color: gold;
   -webkit-filter: brightness(100%);
   filter: brightness(100%);
+}
+
+/******  Game Board  ******/
+
+#console {
+  height: 71vh;
+  width: calc(71vh * 0.6);
+  /* aspect-ratio: 0.6; */
+  border: 2rem outset #efebe9;
+  border-top: 1.5rem outset #efebe9;
+  border-bottom: 1.5rem outset #efebe9;
+  border-radius: 1.5rem;
+  background-color: #1976d2;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  /* Disable double-tap zoom in mobile
+  https://stackoverflow.com/questions/10614481/disable-double-tap-zoom-option-in-browser-on-touch-devices */
+  touch-action: manipulation;
+}
+
+#board {
+  flex-grow: 1;
+  display: grid;
+  padding: var(--board-margin);
+  gap: var(--board-margin);
+  justify-items: center;
+  justify-content: space-evenly;
+  align-items: center;
+  align-content: space-evenly;
+}
+
+#board.num-gems-12 {
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+}
+
+#board.num-gems-8 {
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+}
+
+#board.num-gems-4 {
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+
+/******  Console Controls  ******/
+
+.console-controls {
+  height: 2.75rem;
+  padding: 0 var(--board-margin);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#top-console-controls {
+  padding-top: var(--board-margin);
+}
+
+#bottom-console-controls {
+  padding-bottom: var(--board-margin);
+}
+
+input.lcd {
+  font-family: 'Roses are FF0000', 'Bitwise', 'Courier New', Courier, monospace;
+  font-size: 0.9rem;
+  text-align: center;
+  height: 1.75rem;
+  width: 100%;
+  border: 2px inset grey;
+  background-color: #4caf50;
+  color: #424242;
+  pointer-events: none;
 }
 
 /******  Game Board Buttons  ******/
