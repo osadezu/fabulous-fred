@@ -10,7 +10,7 @@
 :root {
   --btn-height: 0.5rem;
   --board-margin: 0.9rem;
-  --background-color: #424242;
+  --background-color: #616161;
 }
 
 html {
@@ -55,7 +55,6 @@ a:hover {
 }
 
 main {
-  margin: 0 auto;
   position: relative;
   display: grid;
   grid-template-columns: minmax(10%, 1fr) auto minmax(10%, 1fr);
@@ -290,33 +289,6 @@ button:active {
 .gem.bright:active {
   border: 0.2rem solid #f5f5f5;
   box-shadow: 0 var(--btn-height) #f5f5f5;
-}
-
-/******  Modal  ******/
-
-#modal {
-  background-color: rgba(0, 0, 0, 0.4);
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 1;
-  overflow: auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  visibility: hidden;
-}
-
-#modal-content {
-  background-color: #424242;
-  padding: 2rem;
-}
-
-.modal.visible {
-  visibility: visible;
 }
 
 footer {

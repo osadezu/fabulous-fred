@@ -125,7 +125,7 @@ function darkenGem(gem) {
 
 function flashGem(gem, duration) {
   brightenGem(gem);
-  // TODO: Play tone?
+  // TODO: Play tone
   setTimeout(darkenGem, duration, gem);
 }
 
@@ -149,8 +149,6 @@ function createGems() {
 
     // Add gem to game board element
     gameBoard.appendChild(gem);
-
-    // gem.style.borderColor = GEM_COLORS[i];
     btnGems.push(gem);
   }
 }
@@ -304,7 +302,7 @@ function recordGemPress(gemId) {
   } else if (step === challengeSequence.length) {
     // Full sequence matched
 
-    // TODO: do something to notify user he was correct
+    // TODO: do something to notify user was correct
     display.value = 'GREAT!';
 
     // Continue to next round
@@ -336,7 +334,6 @@ function readyToListen() {
   enteredSequence = [];
 
   // Enable game buttons
-  // enableGemInputs();
   refreshControls();
 
   // Display text
@@ -356,7 +353,6 @@ function startRound() {
   game.state = State.Showing;
 
   // Disable inputs
-  // disableGemInputs();
   refreshControls();
 
   // TODO: Move all Display text to a single display handler function
@@ -372,17 +368,3 @@ function startRound() {
   // Trigger sequence
   triggerSequence();
 }
-
-// TODO: imrpove intervals and display sequence completion with Promise delay chain?
-/*
-// https://stackoverflow.com/questions/41079410/delays-between-promises-in-promise-chain
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-let parameterArr = ['a', 'b', 'c', 'd', 'e', 'f'];
-
-parameterArr.reduce(function (promise, item) {
-  return promise.then(function (result) {
-    return Promise.all([delay(50), myPromise(item)]);
-  });
-}, Promise.resolve());
-
- */
