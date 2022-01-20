@@ -1,0 +1,10 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+planning/reference/Fabuloso-Fred-20-box.jpg
+planning/reference/Fabulous-Fred-1980.jpg
+
+# misc
+.DS_Store
+
+# SEI
+/feedback
