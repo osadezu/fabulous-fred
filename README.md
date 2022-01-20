@@ -47,16 +47,12 @@ https://osadezu.github.io/fabulous-fred/
 ## Next Steps
 
 - UI updates:
-  - Add modal with game instructions.
+  - Add intro with game instructions.
   - Updated LED screen handler to make messages more dynamic.
-  - Relocate LED screen and 'Game Controls' (which are needed during play) to the console, so that the other settings can be hidden during the game.
-  - Improve flashing transitions and reactions to make them smoother and more exciting/engaging.
 - Game modes:
   - Implement 'insane mode' in which the buttons are reshuffled after every round and the user must memorize colors (not locations).
   - Implement multi-user mode for 2-4 users to play together against the computer.
   - Implement a play mode in which two users challenge each other.
-- Functionality
-  - Improve sequence display with promises to simplify logic and have a more reactive UI.
 
 ## Planning
 
@@ -76,7 +72,7 @@ Game UI for difficulty level: hard (16 buttons, all colors not shown).
 - [x] As a user, I want to get 'lives' so that I can continue playing an increasingly complex game without losing the first time I make a mistake.
 - [x] As a user, I want the game to have a playful/cute personality so that I can 'know' my opponent.
 - [x] As a user I want additional complexity in the ways the game is played, so that the game continues to be interesting and exciting.
-- [ ] As a user, I want a new mode in which my memory isn't aided by the button's position in the board, so that the game becomes more challenging.
+- [ ] As a user, I want a new mode in which memory isn't aided by the button's position in the board, so that the game becomes more challenging.
 - [ ] As a user, I want to select how many users will be involved, so that I can play with my friends.
 - [ ] As a user, I want to be able to play 1:1 against a friend so that we can challenge each other instead of playing against the computer.
 - [ ] As a user I want the game to display the colors through my smart lighting system so that it becomes more engaging when my friends and I are playing in my living room.
