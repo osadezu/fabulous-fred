@@ -6,8 +6,6 @@ The game is played in the same way as Simon Says, where the computer lights up a
 
 ## Play it here:
 
-https://osadezu.github.io/fabulous-fred/
-
 https://fabulous-fred.osadezu.com/
 
 ### How to play:
