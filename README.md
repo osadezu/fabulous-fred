@@ -1,15 +1,14 @@
 # Fabulous Fred
 
-## About
-
 A memory game inspired by the ultimate electronic game from the 1980s.
 
 The game is played in the same way as Simon Says, where the computer lights up a random sequence of buttons that the user has to repeat by memory. The sequence keeps getting longer until the user presses the wrong button.
 
-### Inspiration
+## Play it here:
 
-Original 'Fabuloso Fred 20' from the 1980s
-![Original 'Fabuloso Fred 20' from the 1980s](./planning/reference/Fabuloso-Fred-20.jpg)[^source]
+https://osadezu.github.io/fabulous-fred/
+
+https://fabulous-fred.osadezu.com/
 
 ### How to play:
 
@@ -20,31 +19,24 @@ Original 'Fabuloso Fred 20' from the 1980s
 - If you lose, the computer will flash the key you missed.
 - Start over any time by hitting that _Fat Reset Button_!
 
-### Play it here!
+## Inspiration
 
-https://osadezu.github.io/fabulous-fred/
+Original 'Fabuloso Fred 20' from the 1980s
+![Original 'Fabuloso Fred 20' from the 1980s](./planning/reference/Fabuloso-Fred-20.jpg)[^source]
 
 ## Game Screenshots
 
 ![View of main play screen](./planning/screenshots/fabulous-fred-screenshot-01.png)
 ![View of play screen with 8 buttons and illuminated gem](./planning/screenshots/fabulous-fred-screenshot-02.png)
 
-## Technologies Used
+### Technologies Used
 
 - The UI is built purely with HTML and CSS.
 - No graphic assets are used other than fonts.
 - The program logic is all vanilla JavaScript.
 - The sequence animations are delegated to functions with timeouts/intervals.
 
-## Installation
-
-- The game can be played online in your browser, no need to install anything!
-- Or you can get your own copy:
-  - Fork this repopsitory
-  - Clone it to your computer
-  - Use a local http server like '[Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer)' to run it
-
-## Next Steps
+### Next Steps
 
 - UI updates:
   - Add intro with game instructions.
